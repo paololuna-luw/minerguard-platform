@@ -67,7 +67,7 @@ URLs esperadas:
 - Frontend: `http://localhost:3000`
 - Backend health: `http://localhost:4000/api/health`
 
-## Estructura
+## Estructura Definida
 
 ```txt
 apps/
