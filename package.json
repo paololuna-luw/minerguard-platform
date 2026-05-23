@@ -1,0 +1,27 @@
+{
+  "name": "minerguard-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plataforma de monitoreo para seguridad y trazabilidad de mineros en zonas subterraneas.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@minerguard/frontend",
+    "dev:frontend": "npm run dev --workspace=@minerguard/frontend",
+    "dev:backend": "npm run start:dev --workspace=@minerguard/backend",
+    "build": "npm run build --workspaces",
+    "build:frontend": "npm run build --workspace=@minerguard/frontend",
+    "build:backend": "npm run build --workspace=@minerguard/backend",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "infra:up": "docker compose up -d",
+    "infra:down": "docker compose down",
+    "infra:logs": "docker compose logs -f"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
