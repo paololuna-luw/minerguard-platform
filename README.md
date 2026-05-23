@@ -7,7 +7,7 @@ MinerGuard es una plataforma de monitoreo para operaciones mineras subterraneas.
 - Frontend con Next.js para dashboard en tiempo real.
 - Backend con NestJS para API, WebSocket y consumo MQTT.
 - PostgreSQL como base de datos principal.
-- Prisma como ORM.
+- Prisma como ORM, programación orientada a objetos.
 - Docker Compose para infraestructura de desarrollo.
 - Paquetes compartidos para tipos y contratos de telemetria.
 - Documentacion inicial en `docs/`.
