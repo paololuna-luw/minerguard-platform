@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: minerguard-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-minerguard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-minerguard_dev_password}
+      POSTGRES_DB: ${POSTGRES_DB:-minerguard}
+    ports:
+      - "5432:5432"
+    volumes:
+      - minerguard_postgres_data:/var/lib/postgresql/data
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-minerguard} -d ${POSTGRES_DB:-minerguard}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mqtt:
+    image: eclipse-mosquitto:2
+    container_name: minerguard-mqtt
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./infra/mqtt/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - minerguard_mqtt_data:/mosquitto/data
+      - minerguard_mqtt_log:/mosquitto/log
+
+volumes:
+  minerguard_postgres_data:
+  minerguard_mqtt_data:
+  minerguard_mqtt_log:

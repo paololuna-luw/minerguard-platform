@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Mine {
+  id        String   @id @default(uuid())
+  name      String
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  zones     Zone[]
+  miners    Miner[]
+  devices   Device[]
+  gateways  Gateway[]
+}
+
+model Zone {
+  id        String   @id @default(uuid())
+  mineId    String
+  name      String
+  level     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mine      Mine     @relation(fields: [mineId], references: [id])
+}
+
+model Miner {
+  id        String   @id @default(uuid())
+  mineId    String
+  fullName  String
+  document  String?
+  status    String   @default("inactive")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mine      Mine     @relation(fields: [mineId], references: [id])
+  devices   Device[]
+}
+
+model Gateway {
+  id        String   @id @default(uuid())
+  mineId    String
+  code      String   @unique
+  name      String
+  status    String   @default("offline")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mine      Mine     @relation(fields: [mineId], references: [id])
+}
+
+model Device {
+  id        String   @id @default(uuid())
+  mineId    String
+  minerId   String?
+  code      String   @unique
+  type      String
+  status    String   @default("offline")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  mine      Mine     @relation(fields: [mineId], references: [id])
+  miner     Miner?   @relation(fields: [minerId], references: [id])
+  telemetry TelemetryEvent[]
+  alerts    Alert[]
+}
+
+model TelemetryEvent {
+  id          String   @id @default(uuid())
+  deviceId    String
+  mineId      String
+  zoneId      String?
+  battery     Int?
+  signalRssi  Int?
+  temperature Float?
+  gasLevel    Float?
+  rawPayload   Json
+  receivedAt  DateTime @default(now())
+
+  device      Device   @relation(fields: [deviceId], references: [id])
+}
+
+model Alert {
+  id          String   @id @default(uuid())
+  deviceId    String?
+  mineId      String
+  type        String
+  severity    String
+  message     String
+  status      String   @default("open")
+  createdAt   DateTime @default(now())
+  resolvedAt  DateTime?
+
+  device      Device?  @relation(fields: [deviceId], references: [id])
+}
