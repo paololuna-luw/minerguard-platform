@@ -84,6 +84,34 @@ function vitalPercent(value: number | undefined | null, min: number, max: number
   return Math.min(100, Math.max(6, ((value - min) / (max - min)) * 100));
 }
 
+function UserIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
+      <path d="M4 21c1.6-4.2 4.2-6 8-6s6.4 1.8 8 6" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function ShieldIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 3 20 6v6c0 5-3.2 8-8 9-4.8-1-8-4-8-9V6l8-3Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" />
+      <path d="m8.5 12 2.2 2.2 4.8-5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function LogoutIcon({ size = 16 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M10 6H6v12h4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+      <path d="M13 12h7" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+      <path d="m17 8 4 4-4 4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+    </svg>
+  );
+}
+
 export default function DashboardPage() {
   const [view, setView] = useState<ViewKey>("overview");
   const [token, setToken] = useState("");
@@ -101,8 +129,10 @@ export default function DashboardPage() {
     type: "all",
     severity: "all"
   });
+  const [sessionOpen, setSessionOpen] = useState(false);
 
   const isAdmin = useMemo(() => user?.roles.some((role) => role.name === "admin") ?? false, [user]);
+  const primaryRole = user?.roles[0]?.name ?? "viewer";
 
   useEffect(() => {
     const storedToken = localStorage.getItem("minerguard_token");
@@ -225,7 +255,7 @@ export default function DashboardPage() {
 
   return (
     <main className="network-bg min-h-screen bg-[#f4f6f8] text-[#172026]">
-      <header className="sticky top-0 z-20 border-b border-[#d8dee4] bg-white">
+      <header className="sticky top-0 z-[80] border-b border-[#d8dee4] bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <BrandLogo />
@@ -234,14 +264,58 @@ export default function DashboardPage() {
               <p className="text-xs text-[#52616b]">LoRa, signos vitales y trazabilidad minera</p>
             </div>
           </div>
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="rounded border border-[#c7d0d8] px-3 py-2">{user.username}</span>
-            <span className="rounded border border-[#8bbf9f] bg-[#eef8f1] px-3 py-2 text-[#285b35]">
-              {user.roles.map((role) => role.name).join(", ")}
-            </span>
-            <button onClick={logout} className="rounded border border-[#c7d0d8] px-3 py-2">
-              Salir
-            </button>
+          <div className="flex flex-wrap items-center gap-3 text-sm">
+            <div className="relative">
+              <button
+                onClick={() => setSessionOpen((value) => !value)}
+                className="flex items-center gap-3 rounded border border-[#d8dee4] bg-[#f8fafb] px-3 py-2 text-left transition hover:border-[#2f6f73] hover:bg-white"
+                aria-expanded={sessionOpen}
+              >
+                <div className="grid h-9 w-9 place-items-center rounded bg-white text-[#2f6f73] shadow-sm">
+                  <UserIcon size={22} />
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate font-semibold leading-tight text-[#172026]">{user.fullName ?? user.username}</p>
+                  <p className="text-xs text-[#52616b]">@{user.username}</p>
+                </div>
+                <span className="flex items-center gap-1 rounded border border-[#8bbf9f] bg-[#eef8f1] px-2 py-1 text-xs font-semibold text-[#285b35]">
+                  <ShieldIcon />
+                  {primaryRole}
+                </span>
+              </button>
+
+              {sessionOpen ? (
+                <div className="absolute right-0 top-[calc(100%+10px)] z-[100] w-[min(360px,calc(100vw-2rem))] rounded border border-[#d8dee4] bg-white p-4 text-sm shadow-xl">
+                  <div className="flex items-start gap-3 border-b border-[#e5e9ed] pb-3">
+                    <div className="grid h-10 w-10 place-items-center rounded bg-[#eef8f1] text-[#2f6f73]">
+                      <UserIcon size={22} />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate font-semibold text-[#172026]">{user.fullName ?? "Usuario sin nombre"}</p>
+                      <p className="text-xs text-[#52616b]">@{user.username}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 grid gap-2">
+                    <InfoLine label="Estado" value={user.status} />
+                    <InfoLine label="Correo" value={user.email ?? "No registrado"} />
+                    <InfoLine label="Roles" value={user.roles.map((role) => role.name).join(", ")} />
+                    <InfoLine label="API" value={getApiUrl()} />
+                  </div>
+                  <div className="mt-3 rounded border border-[#fff0c2] bg-[#fff8df] px-3 py-2 text-xs text-[#765600]">
+                    {user.mustChangePassword
+                      ? "Cambio de contrasena recomendado para esta cuenta."
+                      : "Sesion activa con permisos asignados."}
+                  </div>
+                  <button
+                    onClick={logout}
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded border border-[#d59b9b] bg-[#fff1f1] px-3 py-2 font-semibold text-[#8a2e2e] transition hover:bg-white"
+                  >
+                    <LogoutIcon />
+                    Salir
+                  </button>
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
       </header>
@@ -726,6 +800,15 @@ function Info({ label, value }: { label: string; value: string }) {
     <div className="rounded border border-[#d8dee4] p-3">
       <p className="text-xs uppercase tracking-[0.12em] text-[#6b7a84]">{label}</p>
       <p className="mt-1 font-medium">{value}</p>
+    </div>
+  );
+}
+
+function InfoLine({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-start justify-between gap-3 rounded bg-[#f8fafb] px-3 py-2">
+      <span className="text-xs uppercase tracking-[0.12em] text-[#6b7a84]">{label}</span>
+      <span className="max-w-[180px] truncate text-right font-medium text-[#172026]" title={value}>{value}</span>
     </div>
   );
 }
