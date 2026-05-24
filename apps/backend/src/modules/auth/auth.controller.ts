@@ -6,6 +6,11 @@ type LoginBody = {
   password?: string;
 };
 
+type ChangePasswordBody = {
+  currentPassword?: string;
+  newPassword?: string;
+};
+
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -24,5 +29,16 @@ export class AuthController {
     }
 
     return this.authService.getSessionUser(token);
+  }
+
+  @Post("change-password")
+  changePassword(@Headers("authorization") authorization: string | undefined, @Body() body: ChangePasswordBody) {
+    const token = authorization?.replace(/^Bearer\s+/i, "");
+
+    if (!token) {
+      throw new UnauthorizedException("Missing bearer token");
+    }
+
+    return this.authService.changePassword(token, body.currentPassword ?? "", body.newPassword ?? "");
   }
 }

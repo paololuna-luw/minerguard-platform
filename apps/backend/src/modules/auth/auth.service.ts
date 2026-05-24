@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { verifyPassword } from "./password";
+import { createPasswordHash, verifyPassword } from "./password";
 
 const sessionDurationMs = 1000 * 60 * 60 * 12;
 
@@ -90,6 +90,35 @@ export class AuthService {
     }
 
     return this.toPublicUser(session.user);
+  }
+
+  async changePassword(token: string, currentPassword: string, newPassword: string) {
+    if (newPassword.length < 8) {
+      throw new UnauthorizedException("Password must have at least 8 characters");
+    }
+
+    const session = await this.prisma.authSession.findUnique({
+      where: { tokenHash: this.hashToken(token) },
+      include: { user: true }
+    });
+
+    if (!session || session.revokedAt || session.expiresAt <= new Date()) {
+      throw new UnauthorizedException("Invalid session");
+    }
+
+    if (!verifyPassword(currentPassword, session.user.passwordHash)) {
+      throw new UnauthorizedException("Invalid current password");
+    }
+
+    await this.prisma.user.update({
+      where: { id: session.userId },
+      data: {
+        passwordHash: createPasswordHash(newPassword),
+        mustChangePassword: false
+      }
+    });
+
+    return { changed: true };
   }
 
   private hashToken(token: string) {
