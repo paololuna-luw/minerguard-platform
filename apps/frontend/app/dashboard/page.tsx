@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { BrandLogo } from "../components/BrandLogo";
 
 function getApiUrl() {
   return process.env.NEXT_PUBLIC_API_URL ?? `http://${window.location.hostname}:4000`;
@@ -216,19 +217,22 @@ export default function DashboardPage() {
   }
 
   if (loading || !data || !user) {
-    return <main className="grid min-h-screen place-items-center bg-[#f4f6f8] text-[#52616b]">Cargando MinerGuard...</main>;
+    return <main className="network-bg grid min-h-screen place-items-center bg-[#f4f6f8] text-[#52616b]">Cargando MinerGuard...</main>;
   }
 
   const visibleNav = navItems.filter((item) => !item.adminOnly || isAdmin);
   const selectedMine = data.mines[0];
 
   return (
-    <main className="min-h-screen bg-[#f4f6f8] text-[#172026]">
+    <main className="network-bg min-h-screen bg-[#f4f6f8] text-[#172026]">
       <header className="sticky top-0 z-20 border-b border-[#d8dee4] bg-white">
         <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-xl font-semibold">MinerGuard</h1>
-            <p className="text-sm text-[#52616b]">Centro de monitoreo operativo</p>
+          <div className="flex items-center gap-4">
+            <BrandLogo />
+            <div className="hidden border-l border-[#d8dee4] pl-4 sm:block">
+              <p className="text-sm font-medium text-[#172026]">Centro de monitoreo operativo</p>
+              <p className="text-xs text-[#52616b]">LoRa, signos vitales y trazabilidad minera</p>
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-sm">
             <span className="rounded border border-[#c7d0d8] px-3 py-2">{user.username}</span>

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { BrandLogo } from "../components/BrandLogo";
 
 type LoginState = "idle" | "loading" | "success" | "error";
 
@@ -45,12 +46,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="grid min-h-screen bg-[#f4f6f8] px-5 py-8 text-[#172026] lg:grid-cols-[1fr_420px]">
+    <main className="network-bg grid min-h-screen bg-[#f4f6f8] px-5 py-8 text-[#172026] lg:grid-cols-[1fr_420px]">
       <section className="hidden items-center justify-center border-r border-[#d8dee4] px-10 lg:flex">
         <div className="max-w-xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#2f6f73]">
-            MinerGuard
-          </p>
+          <BrandLogo />
           <h1 className="mt-4 text-4xl font-semibold leading-tight">
             Acceso operativo al monitoreo minero
           </h1>
@@ -66,9 +65,12 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="w-full max-w-[420px] rounded border border-[#d8dee4] bg-white p-6"
         >
-          <div>
+          <div className="space-y-5">
+            <BrandLogo />
+            <div className="border-t border-[#e5e9ed] pt-5">
             <h2 className="text-xl font-semibold">Iniciar sesion</h2>
             <p className="mt-1 text-sm text-[#52616b]">Credencial inicial: admin / admin</p>
+            </div>
           </div>
 
           <label className="mt-6 block text-sm font-medium" htmlFor="username">

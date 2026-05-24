@@ -19,6 +19,60 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.interactive-network-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.network-bg {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(47, 111, 115, 0.08), transparent 26%),
+    radial-gradient(circle at 82% 18%, rgba(139, 191, 159, 0.09), transparent 24%),
+    radial-gradient(circle at 55% 92%, rgba(82, 97, 107, 0.07), transparent 30%);
+}
+
+.network-bg::before,
+.network-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.network-bg::before {
+  opacity: 0.34;
+  background-image:
+    linear-gradient(rgba(47, 111, 115, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(47, 111, 115, 0.055) 1px, transparent 1px);
+  background-size: 56px 56px;
+  animation: network-grid-shift 18s linear infinite;
+}
+
+.network-bg::after {
+  opacity: 0.3;
+  background-image:
+    radial-gradient(circle, rgba(47, 111, 115, 0.2) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(139, 191, 159, 0.2) 0 2px, transparent 3px);
+  background-position:
+    8% 18%,
+    72% 68%;
+  background-size:
+    320px 220px,
+    420px 300px;
+  filter: blur(0.2px);
+  animation: network-drift 28s ease-in-out infinite alternate;
+}
+
+.network-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
 @keyframes soft-in {
   from {
     opacity: 0;
@@ -32,4 +86,31 @@ body {
 
 .soft-in {
   animation: soft-in 180ms ease-out both;
+}
+
+@keyframes network-grid-shift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 56px 56px;
+  }
+}
+
+@keyframes network-drift {
+  from {
+    transform: translate3d(-18px, -10px, 0) scale(1);
+  }
+  to {
+    transform: translate3d(20px, 14px, 0) scale(1.03);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .interactive-network-canvas,
+  .network-bg::before,
+  .network-bg::after {
+    animation: none;
+    display: none;
+  }
 }
