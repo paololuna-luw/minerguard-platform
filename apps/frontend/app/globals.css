@@ -70,7 +70,6 @@ body {
 
 .network-bg > * {
   position: relative;
-  z-index: 1;
 }
 
 @keyframes soft-in {
