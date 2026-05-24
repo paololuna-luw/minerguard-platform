@@ -92,3 +92,5 @@ docs/            Documentacion funcional y tecnica
 ## Estado Inicial
 
 El proyecto queda listo para iniciar desarrollo. La primera version debe enfocarse en telemetria simulada, registro de minas, zonas, mineros, dispositivos, gateways y alertas basicas.
+ 
+ CMD
