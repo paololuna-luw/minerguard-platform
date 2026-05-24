@@ -102,6 +102,8 @@ model Gateway {
   updatedAt DateTime @updatedAt
 
   mine      Mine     @relation(fields: [mineId], references: [id])
+  locations LocationEvent[]
+  nodeSignals NodeSignalEvent[]
 }
 
 model Device {
@@ -118,6 +120,9 @@ model Device {
   miner     Miner?   @relation(fields: [minerId], references: [id])
   telemetry TelemetryEvent[]
   alerts    Alert[]
+  vitalSigns VitalSignEvent[]
+  locations LocationEvent[]
+  nodeSignals NodeSignalEvent[]
 }
 
 model TelemetryEvent {
@@ -147,4 +152,53 @@ model Alert {
   resolvedAt  DateTime?
 
   device      Device?  @relation(fields: [deviceId], references: [id])
+}
+
+model VitalSignEvent {
+  id              String   @id @default(uuid())
+  deviceId        String
+  minerId         String?
+  heartRate       Int?
+  spo2            Int?
+  bodyTemperature Float?
+  fallDetected    Boolean  @default(false)
+  accelX          Float?
+  accelY          Float?
+  accelZ          Float?
+  rawPayload      Json
+  receivedAt      DateTime @default(now())
+
+  device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+}
+
+model LocationEvent {
+  id              String   @id @default(uuid())
+  deviceId        String
+  mineId          String
+  gatewayId       String?
+  x               Float
+  y               Float
+  z               Float?
+  nearestNodeCode String?
+  confidence      Float?
+  source          String   @default("simulation")
+  rawPayload      Json
+  receivedAt      DateTime @default(now())
+
+  device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  gateway         Gateway? @relation(fields: [gatewayId], references: [id], onDelete: SetNull)
+}
+
+model NodeSignalEvent {
+  id              String   @id @default(uuid())
+  deviceId        String
+  gatewayId       String?
+  nearestNodeCode String?
+  signalRssi      Int?
+  snr             Float?
+  rawPayload      Json
+  receivedAt      DateTime @default(now())
+
+  device          Device   @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  gateway         Gateway? @relation(fields: [gatewayId], references: [id], onDelete: SetNull)
 }

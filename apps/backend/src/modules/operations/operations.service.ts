@@ -15,6 +15,18 @@ export class OperationsService {
               telemetry: {
                 orderBy: { receivedAt: "desc" },
                 take: 1
+              },
+              vitalSigns: {
+                orderBy: { receivedAt: "desc" },
+                take: 1
+              },
+              locations: {
+                orderBy: { receivedAt: "desc" },
+                take: 1
+              },
+              nodeSignals: {
+                orderBy: { receivedAt: "desc" },
+                take: 1
               }
             }
           }
@@ -26,6 +38,18 @@ export class OperationsService {
           mine: true,
           miner: true,
           telemetry: {
+            orderBy: { receivedAt: "desc" },
+            take: 1
+          },
+          vitalSigns: {
+            orderBy: { receivedAt: "desc" },
+            take: 1
+          },
+          locations: {
+            orderBy: { receivedAt: "desc" },
+            take: 1
+          },
+          nodeSignals: {
             orderBy: { receivedAt: "desc" },
             take: 1
           }
@@ -70,7 +94,17 @@ export class OperationsService {
 
   listMiners() {
     return this.prisma.miner.findMany({
-      include: { mine: true, devices: true },
+      include: {
+        mine: true,
+        devices: {
+          include: {
+            telemetry: { orderBy: { receivedAt: "desc" }, take: 1 },
+            vitalSigns: { orderBy: { receivedAt: "desc" }, take: 1 },
+            locations: { orderBy: { receivedAt: "desc" }, take: 1 },
+            nodeSignals: { orderBy: { receivedAt: "desc" }, take: 1 }
+          }
+        }
+      },
       orderBy: { fullName: "asc" }
     });
   }
@@ -80,7 +114,10 @@ export class OperationsService {
       include: {
         mine: true,
         miner: true,
-        telemetry: { orderBy: { receivedAt: "desc" }, take: 1 }
+        telemetry: { orderBy: { receivedAt: "desc" }, take: 1 },
+        vitalSigns: { orderBy: { receivedAt: "desc" }, take: 1 },
+        locations: { orderBy: { receivedAt: "desc" }, take: 1 },
+        nodeSignals: { orderBy: { receivedAt: "desc" }, take: 1 }
       },
       orderBy: { code: "asc" }
     });

@@ -34,4 +34,8 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
   publishAlert(payload: unknown) {
     this.server.emit("alert.received", payload);
   }
+
+  publishSimulationState(payload: unknown) {
+    this.server.emit("simulation.state.updated", payload);
+  }
 }

@@ -17,6 +17,9 @@ PostgreSQL es la base de datos principal. Prisma se usa como ORM desde el backen
 - `Role`: rol operativo o administrativo.
 - `UserRole`: asignacion entre usuario y rol.
 - `AuthSession`: sesion activa de autenticacion.
+- `VitalSignEvent`: eventos de signos vitales del wearable.
+- `LocationEvent`: coordenadas 2D/3D simuladas o estimadas.
+- `NodeSignalEvent`: senal reportada contra nodos LoRa.
 
 ## Autenticacion Inicial
 
