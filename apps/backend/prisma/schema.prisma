@@ -20,6 +20,54 @@ model Mine {
   gateways  Gateway[]
 }
 
+model User {
+  id           String    @id @default(uuid())
+  username     String    @unique
+  email        String?   @unique
+  fullName     String?
+  passwordHash String
+  status       String    @default("active")
+  mustChangePassword Boolean @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  roles        UserRole[]
+  sessions     AuthSession[]
+}
+
+model Role {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  users       UserRole[]
+}
+
+model UserRole {
+  id        String   @id @default(uuid())
+  userId    String
+  roleId    String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roleId])
+}
+
+model AuthSession {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model Zone {
   id        String   @id @default(uuid())
   mineId    String

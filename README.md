@@ -44,9 +44,9 @@ npm run infra:up
 
 Esto levanta:
 
-- PostgreSQL en `localhost:5432`.
+- PostgreSQL en `localhost:55432`.
 - MQTT en `localhost:1883`.
-- MQTT WebSocket en `localhost:9001`.
+- MQTT WebSocket en `localhost:19001`.
 
 ## Levantar Aplicaciones
 

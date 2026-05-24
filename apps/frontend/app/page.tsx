@@ -16,9 +16,17 @@ export default function DashboardPage() {
             <h1 className="text-xl font-semibold tracking-normal">MinerGuard</h1>
             <p className="text-sm text-[#52616b]">Monitoreo de seguridad minera en tiempo real</p>
           </div>
-          <div className="flex items-center gap-2 rounded border border-[#c7d0d8] px-3 py-2 text-sm text-[#2f3b43]">
-            <Activity size={16} />
-            Esperando telemetria
+          <div className="flex items-center gap-3">
+            <a
+              href="/login"
+              className="rounded border border-[#2f6f73] px-3 py-2 text-sm font-medium text-[#24575a]"
+            >
+              Ingresar
+            </a>
+            <div className="flex items-center gap-2 rounded border border-[#c7d0d8] px-3 py-2 text-sm text-[#2f3b43]">
+              <Activity size={16} />
+              Esperando telemetria
+            </div>
           </div>
         </div>
       </header>

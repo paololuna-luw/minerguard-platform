@@ -8,5 +8,5 @@ export const defaultPorts = {
   backend: 4000,
   postgres: 5432,
   mqtt: 1883,
-  mqttWebsocket: 9001
+  mqttWebsocket: 19001
 } as const;

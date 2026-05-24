@@ -13,6 +13,31 @@ PostgreSQL es la base de datos principal. Prisma se usa como ORM desde el backen
 - `Gateway`: receptor o nodo de comunicacion.
 - `TelemetryEvent`: evento de telemetria recibido.
 - `Alert`: alerta operacional.
+- `User`: usuario interno del sistema.
+- `Role`: rol operativo o administrativo.
+- `UserRole`: asignacion entre usuario y rol.
+- `AuthSession`: sesion activa de autenticacion.
+
+## Autenticacion Inicial
+
+El sistema crea por seed un usuario inicial para desarrollo:
+
+```txt
+usuario: admin
+contrasena: admin
+rol: admin
+```
+
+Este usuario queda marcado con `mustChangePassword = true`, porque en produccion debe forzarse el cambio de contrasena antes de operar.
+
+Roles iniciales:
+
+- `admin`: acceso total a configuracion, usuarios, roles, dispositivos y monitoreo.
+- `editor`: gestion operativa de minas, mineros, dispositivos, gateways y alertas.
+- `operator`: atiende alertas, revisa estado en tiempo real y registra seguimiento operativo.
+- `viewer`: acceso de solo lectura al dashboard, telemetria, ubicaciones y alertas.
+
+La autenticacion usa sesiones internas en base de datos mediante `AuthSession`. El token entregado al frontend no se guarda en claro; se almacena como hash SHA-256.
 
 ## Esquema
 
