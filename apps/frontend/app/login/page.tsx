@@ -69,7 +69,6 @@ export default function LoginPage() {
             <BrandLogo />
             <div className="border-t border-[#e5e9ed] pt-5">
             <h2 className="text-xl font-semibold">Iniciar sesion</h2>
-            <p className="mt-1 text-sm text-[#52616b]">Credencial inicial: admin / admin</p>
             </div>
           </div>
 

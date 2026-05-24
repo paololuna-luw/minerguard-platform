@@ -14,6 +14,8 @@
     "build": "npm run build --workspaces",
     "build:frontend": "npm run build --workspace=@minerguard/frontend",
     "build:backend": "npm run build --workspace=@minerguard/backend",
+    "render:backend:build": "npm run prisma:generate --workspace=@minerguard/backend && npm run build:backend",
+    "render:backend:start": "npm run prisma:migrate:deploy --workspace=@minerguard/backend && npm run start --workspace=@minerguard/backend",
     "lint": "npm run lint --workspaces",
     "typecheck": "npm run typecheck --workspaces",
     "infra:up": "docker compose up -d",
